@@ -1,11 +1,14 @@
+"use strict";
 // Enemies our player must avoid
-var Enemy = function() {
+var Enemy = function(x, y, speed) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
-
+    this.x = x; // horizontal (row)
+    this.y = y; // vertical (column)
+    this.speed = speed; // enemy speed
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
-    this.sprite = 'images/enemy-bug.png';
+    this.sprite = "images/enemy-bug.png";
 };
 
 // Update the enemy's position, required method for game
@@ -25,21 +28,35 @@ Enemy.prototype.render = function() {
 // This class requires an update(), render() and
 // a handleInput() method.
 
-
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
+// TODO: increase maxSpeed each time level is completed to add difficulty
+let maxSpeed = 500;
+// Use maxSpeed to generate random speed of enemy
+let randomSpeed = () => Math.floor(Math.random() * Math.floor(maxSpeed));
+// engine.js created row at 83, therefore randomly place enemy in 83, 2*83=166, 3*83=249. 3 rows random enemy
+let randomEnemyPosArray = [83, 166, 249];
+// Create Random Position for enemy based off the three rows(randomEnemyPosArray) the enemy will appear in.
+let randomEnemyPos = () =>
+    randomEnemyPosArray[Math.floor(Math.random() * randomEnemyPosArray.length)];
+// Enemy array
+// TODO: Push new enemy into array when difficulty changes
+let allEnemies = [
+    new Enemy(-200, randomEnemyPos(), randomSpeed()),
+    new Enemy(-200, randomEnemyPos(), randomSpeed()),
+    new Enemy(-200, randomEnemyPos(), randomSpeed()),
+    new Enemy(-200, randomEnemyPos(), randomSpeed())
+];
 // Place the player object in a variable called player
-
-
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
-document.addEventListener('keyup', function(e) {
+document.addEventListener("keyup", function(e) {
     var allowedKeys = {
-        37: 'left',
-        38: 'up',
-        39: 'right',
-        40: 'down'
+        37: "left",
+        38: "up",
+        39: "right",
+        40: "down"
     };
 
     player.handleInput(allowedKeys[e.keyCode]);
