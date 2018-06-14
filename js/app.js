@@ -17,6 +17,7 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+
     /* Update Enemy position (horizontal x) based off the speed it is traveling and dt parameter as required */
     this.x += this.speed * dt;
 
@@ -43,17 +44,53 @@ var myChar = function(x, y, speed) {
 };
 
 // myChar prototype for update
-myChar.prototype.update = function(dt) {
+myChar.prototype.update = function() {
     // Update player position
-    this.x += this.speed * dt;
+    // Keep the player sprite within the game area
+    // Restricted moving off screen by finding edge coordinates and subtracting row or column to find opposite point
+    if (player.y > 404) {
+        player.y = 404;
+    }
+
+    if (player.y < -11) {
+        player.y = -11;
+    }
+    // 202 starting location + (2 x 101 column width) = 404
+    if (player.x > 404) {
+        player.x = 404;
+    }
+    // 202 starting location - (2 x 101 column width) = 0
+    if (player.x < 0) {
+        player.x = 0;
+    }
 };
 
 // Render player sprite
 myChar.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
+
+// Required handleInput() method to manage keypress
+myChar.prototype.handleInput = function(keyDirection) {
+    // playerSpeedX is the same as the column width (101) to create uniform movement to each tile
+    let playerSpeedX = player.speed;
+    // playerSpeedY is same as row height (83). used player.speed as base minus 18 to get 83
+    let playerSpeedY = player.speed - 18;
+    if (keyDirection == "up") {
+        player.y -= playerSpeedY;
+    }
+    if (keyDirection == "down") {
+        player.y += playerSpeedY;
+    }
+    if (keyDirection == "left") {
+        player.x -= player.speed;
+    }
+    if (keyDirection == "right") {
+        player.x += player.speed;
+    }
+};
 // TODO: increase maxSpeed each time level is completed to add difficulty
-let maxSpeed = 500;
+let maxSpeed = 400;
 // Use maxSpeed to generate random speed of enemy
 let randomSpeed = () => {
     let howFast = Math.floor(Math.random() * Math.floor(maxSpeed));
@@ -62,7 +99,7 @@ let randomSpeed = () => {
     }
     return howFast;
 };
-// engine.js created row at 83, therefore randomly place enemy in 83, 2*83=166, 3*83=249. 3 rows random enemy
+
 // Used to test randomEnemyPosArray to find paths. let e1 = number; // testing made these y coords seem correct. top track: 62, 2nd track from top: 145, 3rd track: 228.
 let randomEnemyPosArray = [62, 145, 228];
 // Create Random Position for enemy based off the three rows(randomEnemyPosArray) the enemy will appear in.
@@ -78,13 +115,14 @@ let enemyArray = [
     new Enemy(-101, randomEnemyPos(), randomSpeed()),
     new Enemy(-101, randomEnemyPos(), randomSpeed())
 ];
+
 var allEnemies = [];
 for (let theEnemy of enemyArray) {
     allEnemies.push(theEnemy);
 }
 
 // Place the player object in a variable called player
-var player = new myChar(100, 280);
+var player = new myChar(202, 415, 101);
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
 document.addEventListener("keyup", function(e) {
