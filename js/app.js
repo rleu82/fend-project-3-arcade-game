@@ -23,7 +23,9 @@ Enemy.prototype.update = function(dt) {
 
     if (this.x > 505) {
         this.x = -101;
+        // randomly place enemy on one of the tracks
         this.y = randomEnemyPos();
+        // change speed of enemy once it place back to beginning of track
         this.speed = randomSpeed();
     }
 };
@@ -31,6 +33,21 @@ Enemy.prototype.update = function(dt) {
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
+// Collision Axis-Aligned Bounding Box Referenced from Mozilla 2D ollision detection.
+// 73 added to y made character fit perfectly in the tile but I wanted to give more maneuverability
+// so I lowered to
+Enemy.prototype.checkCollisions = function() {
+    if (
+        this.x < player.x + 65.5 &&
+        this.x + 65.5 > player.x &&
+        this.y < player.y + 70 &&
+        this.y + 70 > player.y
+    ) {
+        player.x = 202;
+        player.y = 415;
+    }
 };
 
 // Now write your own player class
@@ -55,11 +72,11 @@ myChar.prototype.update = function() {
     if (player.y < -11) {
         player.y = -11;
     }
-    // 202 starting location + (2 x 101 column width) = 404
+    // 202 starting location plus (2 x 101 column width) = 404
     if (player.x > 404) {
         player.x = 404;
     }
-    // 202 starting location - (2 x 101 column width) = 0
+    // 202 starting location minus (2 x 101 column width) = 0
     if (player.x < 0) {
         player.x = 0;
     }
