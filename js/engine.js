@@ -12,7 +12,7 @@
  * This engine makes the canvas' context (ctx) object globally available to make 
  * writing app.js a little simpler to work with.
  */
-
+var isPaused = false;
 var Engine = (function(global) {
     /* Predefine the variables we'll be using within this scope,
      * create the canvas element, grab the 2D context for that canvas
@@ -55,7 +55,12 @@ var Engine = (function(global) {
         /* Use the browser's requestAnimationFrame function to call this
          * function again as soon as the browser is able to draw another frame.
          */
-        win.requestAnimationFrame(main);
+
+        if (isPaused == true) {
+            return;
+        } else {
+            win.requestAnimationFrame(main);
+        }
     }
 
     /* This function does some initial setup that should only occur once,
@@ -63,9 +68,9 @@ var Engine = (function(global) {
      * game loop.
      */
     function init() {
-        reset();
         lastTime = Date.now();
         main();
+        reset();
     }
 
     /* This function is called by main (our game loop) and itself calls all
@@ -168,8 +173,19 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
+        isPaused = true;
+        player.speed = 0;
         // noop
     }
+    document.addEventListener("keyup", function(e) {
+        var keyPressed = e.which || e.keyCode;
+        if (keyPressed == 80) {
+            isPaused = false;
+            player.speed = 101;
+            lastTime = Date.now();
+            main();
+        }
+    });
 
     /* Go ahead and load all of the images we know we're going to need to
      * draw our game level. Then set init as the callback method, so that when

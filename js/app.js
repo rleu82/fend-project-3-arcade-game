@@ -36,8 +36,11 @@ Enemy.prototype.render = function() {
 };
 
 // Collision Axis-Aligned Bounding Box Referenced from Mozilla 2D ollision detection.
+// Used numbers instead of player.height as stated at Mozilla.
 // 73 added to y made character fit perfectly in the tile but I wanted to give more maneuverability
-// so I lowered to
+// so I lowered to 70 for adjust for quick movements.
+// X is more important in terms of collision. Most of the collisions will take place on x (row). Reducing
+// the box width gave more maneuverability and more enjoyable experience.
 Enemy.prototype.checkCollisions = function() {
     if (
         this.x < player.x + 65.5 &&
@@ -147,8 +150,8 @@ document.addEventListener("keyup", function(e) {
         37: "left",
         38: "up",
         39: "right",
-        40: "down"
+        40: "down",
+        80: "pause"
     };
-
     player.handleInput(allowedKeys[e.keyCode]);
 });
