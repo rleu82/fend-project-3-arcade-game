@@ -18,16 +18,20 @@ var Engine = (function(global) {
      * create the canvas element, grab the 2D context for that canvas
      * set the canvas elements height/width and add it to the DOM.
      */
-    var doc = global.document,
+
+    // var doc = global.document,
+    var doc = document.getElementById("game-container"),
         win = global.window,
-        canvas = doc.createElement("canvas"),
+        canvas = document.createElement("canvas"),
         ctx = canvas.getContext("2d"),
         lastTime;
-
+    /* default canvas size
     canvas.width = 505;
     canvas.height = 606;
-    doc.body.appendChild(canvas);
-
+*/
+    canvas.width = 707;
+    canvas.height = 772;
+    doc.appendChild(canvas);
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
      */
@@ -118,11 +122,13 @@ var Engine = (function(global) {
                 "images/stone-block.png", // Row 1 of 3 of stone
                 "images/stone-block.png", // Row 2 of 3 of stone
                 "images/stone-block.png", // Row 3 of 3 of stone
+                "images/stone-block.png", // Added row of stone
+                "images/stone-block.png", // Added row of stone
                 "images/grass-block.png", // Row 1 of 2 of grass
                 "images/grass-block.png" // Row 2 of 2 of grass
             ],
-            numRows = 6,
-            numCols = 5,
+            numRows = 8,
+            numCols = 7,
             row,
             col;
 
@@ -142,6 +148,9 @@ var Engine = (function(global) {
                  * so that we get the benefits of caching these images, since
                  * we're using them over and over.
                  */
+
+                ctx.font = "35px Arial";
+                ctx.fillText("Score", 0, 40);
                 ctx.drawImage(
                     Resources.get(rowImages[row]),
                     col * 101,
@@ -173,10 +182,11 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        isPaused = true;
-        player.speed = 0;
+        // isPaused = true;
+        // player.speed = 0;
         // noop
     }
+    /*
     document.addEventListener("keyup", function(e) {
         var keyPressed = e.which || e.keyCode;
         if (keyPressed == 80) {
@@ -186,6 +196,7 @@ var Engine = (function(global) {
             main();
         }
     });
+    */
 
     /* Go ahead and load all of the images we know we're going to need to
      * draw our game level. Then set init as the callback method, so that when

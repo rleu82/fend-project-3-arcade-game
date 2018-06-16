@@ -21,7 +21,7 @@ Enemy.prototype.update = function(dt) {
     /* Update Enemy position (horizontal x) based off the speed it is traveling and dt parameter as required */
     this.x += this.speed * dt;
 
-    if (this.x > 505) {
+    if (this.x > 707) {
         this.x = -101;
         // randomly place enemy on one of the tracks
         this.y = randomEnemyPos();
@@ -48,8 +48,8 @@ Enemy.prototype.checkCollisions = function() {
         this.y < player.y + 70 &&
         this.y + 70 > player.y
     ) {
-        player.x = 202;
-        player.y = 415;
+        player.x = 303;
+        player.y = 664;
     }
 };
 
@@ -68,16 +68,22 @@ myChar.prototype.update = function() {
     // Update player position
     // Keep the player sprite within the game area
     // Restricted moving off screen by finding edge coordinates and subtracting row or column to find opposite point
-    if (player.y > 404) {
-        player.y = 404;
+    if (player.y > 570) {
+        player.y = 570;
     }
 
-    if (player.y < -11) {
-        player.y = -11;
+    if (player.y < 0) {
+        // player.y = -11;
+        player.speed = 0;
+        setTimeout(function() {
+            player.speed = 101;
+            player.x = 303;
+            player.y = 664;
+        }, 2000);
     }
     // 202 starting location plus (2 x 101 column width) = 404
-    if (player.x > 404) {
-        player.x = 404;
+    if (player.x > 606) {
+        player.x = 606;
     }
     // 202 starting location minus (2 x 101 column width) = 0
     if (player.x < 0) {
@@ -121,7 +127,7 @@ let randomSpeed = () => {
 };
 
 // Used to test randomEnemyPosArray to find paths. let e1 = number; // testing made these y coords seem correct. top track: 62, 2nd track from top: 145, 3rd track: 228.
-let randomEnemyPosArray = [62, 145, 228];
+let randomEnemyPosArray = [62, 145, 228, 311, 394];
 // Create Random Position for enemy based off the three rows(randomEnemyPosArray) the enemy will appear in.
 let randomEnemyPos = () =>
     randomEnemyPosArray[Math.floor(Math.random() * randomEnemyPosArray.length)];
@@ -130,6 +136,9 @@ let randomEnemyPos = () =>
 // Enemy array to push into allEnemies array
 // TODO: Push new enemy into array when difficulty changes
 let enemyArray = [
+    new Enemy(-101, randomEnemyPos(), randomSpeed()),
+    new Enemy(-101, randomEnemyPos(), randomSpeed()),
+    new Enemy(-101, randomEnemyPos(), randomSpeed()),
     new Enemy(-101, randomEnemyPos(), randomSpeed()),
     new Enemy(-101, randomEnemyPos(), randomSpeed()),
     new Enemy(-101, randomEnemyPos(), randomSpeed()),
@@ -142,7 +151,7 @@ for (let theEnemy of enemyArray) {
 }
 
 // Place the player object in a variable called player
-var player = new myChar(202, 415, 101);
+var player = new myChar(303, 664, 101);
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
 document.addEventListener("keyup", function(e) {
