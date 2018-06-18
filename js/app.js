@@ -71,15 +71,20 @@ myChar.prototype.update = function() {
     if (player.y > 570) {
         player.y = 570;
     }
-
+    // Player reaches water. Player wins and executes
     if (player.y < 0) {
-        // player.y = -11;
+        player.y = -11;
         player.speed = 0;
+        playerSpeedY = 0;
+        reachedWater();
+        player.x = 303;
+        player.y = 664;
         setTimeout(function() {
+            theBanner.classList.remove("animated", "bounceIn");
+            theBanner.innerHTML = ``;
             player.speed = 101;
-            player.x = 303;
-            player.y = 664;
-        }, 2000);
+            playerSpeedY = 83;
+        }, 3000);
     }
     // 202 starting location plus (2 x 101 column width) = 404
     if (player.x > 606) {
@@ -97,11 +102,10 @@ myChar.prototype.render = function() {
 };
 
 // Required handleInput() method to manage keypress
+// player.speed is the same as the column width (101) to create uniform movement to each tile
+// playerSpeedY is same as row height (83). used player.speed as base minus 18 to get 83
+let playerSpeedY = 83;
 myChar.prototype.handleInput = function(keyDirection) {
-    // playerSpeedX is the same as the column width (101) to create uniform movement to each tile
-    let playerSpeedX = player.speed;
-    // playerSpeedY is same as row height (83). used player.speed as base minus 18 to get 83
-    let playerSpeedY = player.speed - 18;
     if (keyDirection == "up") {
         player.y -= playerSpeedY;
     }
@@ -164,3 +168,10 @@ document.addEventListener("keyup", function(e) {
     };
     player.handleInput(allowedKeys[e.keyCode]);
 });
+
+let theBanner = document.getElementById("banner-container");
+let atWaterMessage = `<span>Level Cleared!</span>`;
+function reachedWater() {
+    theBanner.classList.add("animated", "bounceIn");
+    theBanner.innerHTML = atWaterMessage;
+}
