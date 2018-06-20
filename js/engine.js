@@ -20,10 +20,10 @@ var Engine = (function(global) {
      */
 
     // var doc = global.document,
-    var doc = document.getElementById("game-container"),
+    var doc = document.getElementById('game-container'),
         win = global.window,
-        canvas = document.createElement("canvas"),
-        ctx = canvas.getContext("2d"),
+        canvas = document.createElement('canvas'),
+        ctx = canvas.getContext('2d'),
         lastTime;
     /* default canvas size
     canvas.width = 505;
@@ -118,14 +118,14 @@ var Engine = (function(global) {
          * for that particular row of the game level.
          */
         var rowImages = [
-                "images/water-block.png", // Top row is water
-                "images/stone-block.png", // Row 1 of 3 of stone
-                "images/stone-block.png", // Row 2 of 3 of stone
-                "images/stone-block.png", // Row 3 of 3 of stone
-                "images/stone-block.png", // Added row of stone
-                "images/stone-block.png", // Added row of stone
-                "images/grass-block.png", // Row 1 of 2 of grass
-                "images/grass-block.png" // Row 2 of 2 of grass
+                'images/water-block.png', // Top row is water
+                'images/stone-block.png', // Row 1 of 3 of stone
+                'images/stone-block.png', // Row 2 of 3 of stone
+                'images/stone-block.png', // Row 3 of 3 of stone
+                'images/stone-block.png', // Added row of stone
+                'images/stone-block.png', // Added row of stone
+                'images/grass-block.png', // Row 1 of 2 of grass
+                'images/grass-block.png' // Row 2 of 2 of grass
             ],
             numRows = 8,
             numCols = 7,
@@ -170,7 +170,9 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
-
+        allGems.forEach(function(gem) {
+            gem.render();
+        });
         player.render();
     }
 
@@ -200,14 +202,14 @@ var Engine = (function(global) {
      * all of these images are properly loaded our game will start.
      */
     Resources.load([
-        "images/stone-block.png",
-        "images/water-block.png",
-        "images/grass-block.png",
-        "images/enemy-bug.png",
-        "images/char-boy.png",
-        "images/Gem-Blue.png",
-        "images/Gem-Green.png",
-        "images/Gem-Orange.png"
+        'images/stone-block.png',
+        'images/water-block.png',
+        'images/grass-block.png',
+        'images/enemy-bug.png',
+        'images/char-boy.png',
+        'images/Gem-Blue.png',
+        'images/Gem-Green.png',
+        'images/Gem-Orange.png'
     ]);
     Resources.onReady(init);
 

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 // Enemies our player must avoid
 var Enemy = function(x, y, speed) {
     // Variables applied to each of our instances go here,
@@ -8,7 +8,7 @@ var Enemy = function(x, y, speed) {
     this.speed = speed; // enemy speed
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
-    this.sprite = "images/enemy-bug.png";
+    this.sprite = 'images/enemy-bug.png';
 };
 
 // Update the enemy's position, required method for game
@@ -60,7 +60,7 @@ var myChar = function(x, y, speed) {
     this.x = x;
     this.y = y;
     this.speed = speed;
-    this.sprite = "images/char-boy.png";
+    this.sprite = 'images/char-boy.png';
 };
 
 // myChar prototype for update
@@ -76,14 +76,11 @@ myChar.prototype.update = function() {
         player.y = -11;
         player.speed = 0;
         playerSpeedY = 0;
-        reachedWater();
         player.x = 303;
         player.y = 664;
+        reachedWater();
         setTimeout(function() {
-            theBanner.classList.remove("animated", "bounceIn");
-            theBanner.innerHTML = ``;
-            player.speed = 101;
-            playerSpeedY = 83;
+            nextRound();
         }, 3000);
     }
     // 202 starting location plus (2 x 101 column width) = 404
@@ -106,19 +103,96 @@ myChar.prototype.render = function() {
 // playerSpeedY is same as row height (83). used player.speed as base minus 18 to get 83
 let playerSpeedY = 83;
 myChar.prototype.handleInput = function(keyDirection) {
-    if (keyDirection == "up") {
+    if (keyDirection == 'up') {
         player.y -= playerSpeedY;
     }
-    if (keyDirection == "down") {
+    if (keyDirection == 'down') {
         player.y += playerSpeedY;
     }
-    if (keyDirection == "left") {
+    if (keyDirection == 'left') {
         player.x -= player.speed;
     }
-    if (keyDirection == "right") {
+    if (keyDirection == 'right') {
         player.x += player.speed;
     }
 };
+
+let randomGemSpriteArray = [
+    'images/Gem-Blue.png',
+    'images/Gem-Green.png',
+    'images/Gem-Orange.png'
+];
+let randomGemSprite = () =>
+    randomGemSpriteArray[
+        Math.floor(Math.random() * randomGemSpriteArray.length)
+    ];
+// Gem Constructor
+var itemGem = function(x, y, boxNum) {
+    this.x = x;
+    this.y = y;
+    this.boxNum = boxNum;
+    this.sprite = randomGemSprite();
+};
+
+// Render Gem
+itemGem.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
+// Generate random gem locations: x, y, boxNum (for CSSgrid interaction)
+var gridGemsPos = function() {
+    // Grid positions stored as objects / gems place in enemy tracks
+    let randomGemPosArray = [
+        // row 1 of enemy track y = 62
+        { x: 0, y: 62, boxNum: 'b15' },
+        { x: 101, y: 62, boxNum: 'b16' },
+        { x: 202, y: 62, boxNum: 'b17' },
+        { x: 303, y: 62, boxNum: 'b18' },
+        { x: 404, y: 62, boxNum: 'b19' },
+        { x: 505, y: 62, boxNum: 'b20' },
+        { x: 606, y: 62, boxNum: 'b21' },
+        // row 2 of enemy track y = 145
+        { x: 0, y: 145, boxNum: 'b22' },
+        { x: 101, y: 145, boxNum: 'b23' },
+        { x: 202, y: 145, boxNum: 'b24' },
+        { x: 303, y: 145, boxNum: 'b25' },
+        { x: 404, y: 145, boxNum: 'b26' },
+        { x: 505, y: 145, boxNum: 'b27' },
+        { x: 606, y: 145, boxNum: 'b28' },
+        // row 3 of enemy track y = 228
+        { x: 0, y: 228, boxNum: 'b29' },
+        { x: 101, y: 228, boxNum: 'b30' },
+        { x: 202, y: 228, boxNum: 'b31' },
+        { x: 303, y: 228, boxNum: 'b32' },
+        { x: 404, y: 228, boxNum: 'b33' },
+        { x: 505, y: 228, boxNum: 'b34' },
+        { x: 606, y: 228, boxNum: 'b35' },
+        // row 4 of enemy track y = 311
+        { x: 0, y: 311, boxNum: 'b36' },
+        { x: 101, y: 311, boxNum: 'b37' },
+        { x: 202, y: 311, boxNum: 'b38' },
+        { x: 303, y: 311, boxNum: 'b39' },
+        { x: 404, y: 311, boxNum: 'b40' },
+        { x: 505, y: 311, boxNum: 'b41' },
+        { x: 606, y: 311, boxNum: 'b42' },
+        // row 5 of enemy track y = 394
+        { x: 0, y: 394, boxNum: 'b43' },
+        { x: 101, y: 394, boxNum: 'b44' },
+        { x: 202, y: 394, boxNum: 'b45' },
+        { x: 303, y: 394, boxNum: 'b46' },
+        { x: 404, y: 394, boxNum: 'b47' },
+        { x: 505, y: 394, boxNum: 'b48' },
+        { x: 606, y: 394, boxNum: 'b49' }
+    ];
+    // Randomize selection of gem location (randomGemPosArray object)
+    // Get random object index and store in gemObject
+    let randomGemObjectIndex = Math.floor(
+        Math.random() * randomGemPosArray.length
+    );
+    let gemObject = randomGemPosArray[randomGemObjectIndex];
+    return gemObject;
+};
+
 // TODO: increase maxSpeed each time level is completed to add difficulty
 let maxSpeed = 400;
 // Use maxSpeed to generate random speed of enemy
@@ -130,16 +204,16 @@ let randomSpeed = () => {
     return howFast;
 };
 
-// Used to test randomEnemyPosArray to find paths. let e1 = number; // testing made these y coords seem correct. top track: 62, 2nd track from top: 145, 3rd track: 228.
+// Top track starts: 62, 2nd track from top: 145, 3rd track: 228, 4th track: 311, 5th track: 394;
 let randomEnemyPosArray = [62, 145, 228, 311, 394];
 // Create Random Position for enemy based off the three rows(randomEnemyPosArray) the enemy will appear in.
 let randomEnemyPos = () =>
     randomEnemyPosArray[Math.floor(Math.random() * randomEnemyPosArray.length)];
+
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
-// Enemy array to push into allEnemies array
 // TODO: Push new enemy into array when difficulty changes
-let enemyArray = [
+var allEnemies = [
     new Enemy(-101, randomEnemyPos(), randomSpeed()),
     new Enemy(-101, randomEnemyPos(), randomSpeed()),
     new Enemy(-101, randomEnemyPos(), randomSpeed()),
@@ -149,29 +223,39 @@ let enemyArray = [
     new Enemy(-101, randomEnemyPos(), randomSpeed())
 ];
 
-var allEnemies = [];
-for (let theEnemy of enemyArray) {
-    allEnemies.push(theEnemy);
-}
-
 // Place the player object in a variable called player
 var player = new myChar(303, 664, 101);
+
+// Place gem objects in variable called allGems
+var allGems = [
+    new itemGem(gridGemsPos().x, gridGemsPos().y, gridGemsPos().boxNum),
+    new itemGem(gridGemsPos().x, gridGemsPos().y, gridGemsPos().boxNum),
+    new itemGem(gridGemsPos().x, gridGemsPos().y, gridGemsPos().boxNum)
+];
+
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
-document.addEventListener("keyup", function(e) {
+document.addEventListener('keyup', function(e) {
     var allowedKeys = {
-        37: "left",
-        38: "up",
-        39: "right",
-        40: "down",
-        80: "pause"
+        37: 'left',
+        38: 'up',
+        39: 'right',
+        40: 'down',
+        80: 'pause'
     };
     player.handleInput(allowedKeys[e.keyCode]);
 });
 
-let theBanner = document.getElementById("banner-container");
+let theBanner = document.getElementById('banner-container');
 let atWaterMessage = `<span>Level Cleared!</span>`;
 function reachedWater() {
-    theBanner.classList.add("animated", "bounceIn");
+    theBanner.classList.add('animated', 'bounceIn');
     theBanner.innerHTML = atWaterMessage;
+}
+
+function nextRound() {
+    theBanner.classList.remove('animated', 'bounceIn');
+    theBanner.innerHTML = ``;
+    player.speed = 101;
+    playerSpeedY = 83;
 }
