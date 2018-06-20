@@ -1,6 +1,6 @@
 'use strict';
 // Enemies our player must avoid
-var Enemy = function(x, y, speed) {
+let Enemy = function(x, y, speed) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
     this.x = x; // horizontal (row)
@@ -56,7 +56,7 @@ Enemy.prototype.checkCollisions = function() {
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
-var myChar = function(x, y, speed) {
+let myChar = function(x, y, speed) {
     this.x = x;
     this.y = y;
     this.speed = speed;
@@ -105,29 +105,24 @@ let playerSpeedY = 83;
 myChar.prototype.handleInput = function(keyDirection) {
     if (keyDirection == 'up') {
         player.y -= playerSpeedY;
+        updateScore();
     }
     if (keyDirection == 'down') {
         player.y += playerSpeedY;
+        updateScore();
     }
     if (keyDirection == 'left') {
         player.x -= player.speed;
+        updateScore();
     }
     if (keyDirection == 'right') {
         player.x += player.speed;
+        updateScore();
     }
 };
 
-let randomGemSpriteArray = [
-    'images/Gem-Blue.png',
-    'images/Gem-Green.png',
-    'images/Gem-Orange.png'
-];
-let randomGemSprite = () =>
-    randomGemSpriteArray[
-        Math.floor(Math.random() * randomGemSpriteArray.length)
-    ];
 // Gem Constructor
-var itemGem = function(x, y, boxNum) {
+let itemGem = function(x, y, boxNum) {
     this.x = x;
     this.y = y;
     this.boxNum = boxNum;
@@ -138,9 +133,29 @@ var itemGem = function(x, y, boxNum) {
 itemGem.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
+// Check Gem Collision
+itemGem.prototype.checkCollisions = function() {
+    let boxID = document.getElementById(this.boxNum);
+    let addPoints = `<span>+100</span>`;
+    if (
+        this.x < player.x + 65.5 &&
+        this.x + 65.5 > player.x &&
+        this.y < player.y + 70 &&
+        this.y + 70 > player.y
+    ) {
+        boxID.innerHTML = addPoints;
+        boxID.classList.add('animated', 'fadeOutUp');
+        this.x = -300;
+        this.y = -300;
+        setTimeout(function() {
+            boxID.classList.remove('animated', 'fadeOutUp');
+            boxID.innerHTML = ``;
+        }, 3000);
+    }
+};
 
 // Generate random gem locations: x, y, boxNum (for CSSgrid interaction)
-var gridGemsPos = function() {
+let gridGemsPos = function() {
     // Grid positions stored as objects / gems place in enemy tracks
     let randomGemPosArray = [
         // row 1 of enemy track y = 62
@@ -193,6 +208,17 @@ var gridGemsPos = function() {
     return gemObject;
 };
 
+// Get random sprite from gem sprite array
+let randomGemSpriteArray = [
+    'images/Gem-Blue.png',
+    'images/Gem-Green.png',
+    'images/Gem-Orange.png'
+];
+let randomGemSprite = () =>
+    randomGemSpriteArray[
+        Math.floor(Math.random() * randomGemSpriteArray.length)
+    ];
+
 // TODO: increase maxSpeed each time level is completed to add difficulty
 let maxSpeed = 400;
 // Use maxSpeed to generate random speed of enemy
@@ -213,7 +239,7 @@ let randomEnemyPos = () =>
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // TODO: Push new enemy into array when difficulty changes
-var allEnemies = [
+let allEnemies = [
     new Enemy(-101, randomEnemyPos(), randomSpeed()),
     new Enemy(-101, randomEnemyPos(), randomSpeed()),
     new Enemy(-101, randomEnemyPos(), randomSpeed()),
@@ -224,14 +250,16 @@ var allEnemies = [
 ];
 
 // Place the player object in a variable called player
-var player = new myChar(303, 664, 101);
+let player = new myChar(303, 664, 101);
 
-// Place gem objects in variable called allGems
-var allGems = [
-    new itemGem(gridGemsPos().x, gridGemsPos().y, gridGemsPos().boxNum),
-    new itemGem(gridGemsPos().x, gridGemsPos().y, gridGemsPos().boxNum),
-    new itemGem(gridGemsPos().x, gridGemsPos().y, gridGemsPos().boxNum)
-];
+// Generate 3 Gems and place them in array(allGems) to render
+let gemOne = gridGemsPos();
+let gemTwo = gridGemsPos();
+let gemThree = gridGemsPos();
+let firstGem = new itemGem(gemOne.x, gemOne.y, gemOne.boxNum);
+let secondGem = new itemGem(gemTwo.x, gemTwo.y, gemTwo.boxNum);
+let thirdGem = new itemGem(gemThree.x, gemThree.y, gemThree.boxNum);
+let allGems = [firstGem, secondGem, thirdGem];
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -246,16 +274,67 @@ document.addEventListener('keyup', function(e) {
     player.handleInput(allowedKeys[e.keyCode]);
 });
 
-let theBanner = document.getElementById('banner-container');
-let atWaterMessage = `<span>Level Cleared!</span>`;
+// score and level tracking variables
+// level increase each time player reaches water
+// score will increase when: movement above grass safe is 50 points, gem give 100 points, clearing level 500 points
+let curLevel = 1;
+let curScore = 0;
 function reachedWater() {
-    theBanner.classList.add('animated', 'bounceIn');
+    let theBanner = document.getElementById('banner-container');
+    // Insert level cleared message and animate level clear message using AnimateCSS
+    let atWaterMessage = `<span>Level ${curLevel} Cleared!</span>`;
     theBanner.innerHTML = atWaterMessage;
+    theBanner.classList.add('animated', 'bounceIn');
+    // increase level number and add score for clearing level
+    curLevel++;
+    curScore = curScore + 500;
 }
 
 function nextRound() {
+    let theBanner = document.getElementById('banner-container');
     theBanner.classList.remove('animated', 'bounceIn');
     theBanner.innerHTML = ``;
     player.speed = 101;
     playerSpeedY = 83;
+    // instantiate gems for next round
+    reInstantiateGems();
+}
+function updateScore() {
+    let scoreSpan = document.getElementById('box1-info1');
+    let highScoreSpan = document.getElementById('box1-info2');
+    let curHighScore = Number(localStorage.HighScore);
+    highScoreSpan.innerHTML = `<span>High Score: ${curHighScore}</span>`;
+    if (player.y < 477) {
+        curScore = curScore + 50;
+        scoreSpan.innerHTML = `<span>Score: ${curScore}</span>`;
+        if (localStorage.HighScore) {
+            if (curScore >= curHighScore) {
+                localStorage.HighScore = curScore;
+                highScoreSpan.innerHTML = `<span>High Score: ${curScore}</span>`;
+            }
+        } else {
+            localStorage.HighScore = 0;
+        }
+    }
+}
+function highScore() {
+    localStorage.h;
+}
+function reInstantiateGems() {
+    let gemOne = gridGemsPos();
+    let gemTwo = gridGemsPos();
+    let gemThree = gridGemsPos();
+    firstGem.x = gemOne.x;
+    firstGem.y = gemOne.y;
+    firstGem.boxNum = gemOne.boxNum;
+    firstGem.sprite = randomGemSprite();
+    secondGem.x = gemTwo.x;
+    secondGem.y = gemTwo.y;
+    secondGem.boxNum = gemTwo.boxNum;
+    secondGem.sprite = randomGemSprite();
+    thirdGem.x = gemThree.x;
+    thirdGem.y = gemThree.y;
+    thirdGem.boxNum = gemThree.boxNum;
+    thirdGem.sprite = randomGemSprite();
+    allGems = [firstGem, secondGem, thirdGem];
 }
