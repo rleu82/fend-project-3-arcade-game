@@ -133,6 +133,7 @@ let itemGem = function(x, y, boxNum) {
 itemGem.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
+
 // Check Gem Collision
 itemGem.prototype.checkCollisions = function() {
     let boxID = document.getElementById(this.boxNum);
@@ -143,6 +144,9 @@ itemGem.prototype.checkCollisions = function() {
         this.y < player.y + 70 &&
         this.y + 70 > player.y
     ) {
+        curScore = curScore + 100;
+        updateScore();
+        highScore();
         boxID.innerHTML = addPoints;
         boxID.classList.add('animated', 'fadeOutUp');
         this.x = -300;
@@ -274,11 +278,12 @@ document.addEventListener('keyup', function(e) {
     player.handleInput(allowedKeys[e.keyCode]);
 });
 
+let curLevel = 1;
+let curScore = 0;
+let performanceGems = 0;
 // score and level tracking variables
 // level increase each time player reaches water
 // score will increase when: movement above grass safe is 50 points, gem give 100 points, clearing level 500 points
-let curLevel = 1;
-let curScore = 0;
 function reachedWater() {
     let theBanner = document.getElementById('banner-container');
     // Insert level cleared message and animate level clear message using AnimateCSS
@@ -288,6 +293,9 @@ function reachedWater() {
     // increase level number and add score for clearing level
     curLevel++;
     curScore = curScore + 500;
+    updateScore();
+    highScore();
+    performanceGems = 0;
 }
 
 function nextRound() {
@@ -301,24 +309,25 @@ function nextRound() {
 }
 function updateScore() {
     let scoreSpan = document.getElementById('box1-info1');
-    let highScoreSpan = document.getElementById('box1-info2');
-    let curHighScore = Number(localStorage.HighScore);
-    highScoreSpan.innerHTML = `<span>High Score: ${curHighScore}</span>`;
+    scoreSpan.innerHTML = `<span>Score: ${curScore}</span>`;
     if (player.y < 477) {
         curScore = curScore + 50;
         scoreSpan.innerHTML = `<span>Score: ${curScore}</span>`;
-        if (localStorage.HighScore) {
-            if (curScore >= curHighScore) {
-                localStorage.HighScore = curScore;
-                highScoreSpan.innerHTML = `<span>High Score: ${curScore}</span>`;
-            }
-        } else {
-            localStorage.HighScore = 0;
-        }
+        highScore();
     }
 }
 function highScore() {
-    localStorage.h;
+    let highScoreSpan = document.getElementById('box1-info2');
+    let curHighScore = Number(localStorage.HighScore);
+    highScoreSpan.innerHTML = `<span>High Score: ${curHighScore}</span>`;
+    if (localStorage.HighScore) {
+        if (curScore >= curHighScore) {
+            localStorage.HighScore = curScore;
+            highScoreSpan.innerHTML = `<span>High Score: ${curScore}</span>`;
+        }
+    } else {
+        localStorage.HighScore = 0;
+    }
 }
 function reInstantiateGems() {
     let gemOne = gridGemsPos();
