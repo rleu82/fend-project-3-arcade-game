@@ -50,6 +50,11 @@ Enemy.prototype.checkCollisions = function() {
     ) {
         player.x = 303;
         player.y = 664;
+        player.speed = 0;
+        playerSpeedY = 0;
+        player.x = 303;
+        player.y = 664;
+        buggedOut();
     }
 };
 
@@ -71,7 +76,8 @@ myChar.prototype.update = function() {
     if (player.y > 570) {
         player.y = 570;
     }
-    // Player reaches water. Player wins and executes
+    // Player reaches water. Player clears level.
+    // Player is set back to starting to start next level.
     if (player.y < 0) {
         player.y = -11;
         player.speed = 0;
@@ -90,6 +96,9 @@ myChar.prototype.update = function() {
     // 202 starting location minus (2 x 101 column width) = 0
     if (player.x < 0) {
         player.x = 0;
+    }
+    if (curLives == 0) {
+        gameOver();
     }
 };
 
@@ -280,6 +289,23 @@ document.addEventListener('keyup', function(e) {
 
 let curLevel = 1;
 let curScore = 0;
+let curLives = 5;
+function buggedOut() {
+    curLives--;
+    let bugMessage = `<span>You bugged out! ${curLives} lives left!</span>`;
+    if (curLives === 1) {
+        bugMessage = `<span>You bugged out! ${curLives} life left!</span>`;
+    }
+    let theSecondBanner = document.getElementById('second-banner');
+    theSecondBanner.innerHTML = bugMessage;
+    theSecondBanner.classList.add('animated', 'tada');
+    setTimeout(function() {
+        nextLife();
+    }, 1000);
+    setTimeout(function() {
+        clearAnnounce();
+    }, 2000);
+}
 // score and level tracking variables
 // level increase each time player reaches water
 // score will increase when: movement above grass safe is 50 points, gem give 100 points, clearing level 500 points
@@ -302,15 +328,29 @@ function levelAnnounce() {
 
 function clearAnnounce() {
     let theBanner = document.getElementById('banner-container');
+    let theSecondBanner = document.getElementById('second-banner');
+    theSecondBanner.classList.remove('animated', 'tada');
     theBanner.classList.remove('animated', 'bounceIn');
     theBanner.innerHTML = ``;
+    theSecondBanner.innerHTML = ``;
 }
+
 function nextRound() {
     player.speed = 101;
     playerSpeedY = 83;
     clearAnnounce();
     // instantiate gems for next round
     reInstantiateGems();
+}
+
+function nextLife() {
+    player.speed = 101;
+    playerSpeedY = 83;
+}
+
+function gameOver() {
+    player.speed = 0;
+    playerSpeedY = 0;
 }
 function updateScore() {
     let scoreSpan = document.getElementById('box1-info1');
@@ -321,6 +361,7 @@ function updateScore() {
         highScore();
     }
 }
+
 function highScore() {
     let highScoreSpan = document.getElementById('box1-info2');
     let curHighScore = Number(localStorage.HighScore);
@@ -334,6 +375,7 @@ function highScore() {
         localStorage.HighScore = 0;
     }
 }
+
 function reInstantiateGems() {
     let gemOne = gridGemsPos();
     let gemTwo = gridGemsPos();
