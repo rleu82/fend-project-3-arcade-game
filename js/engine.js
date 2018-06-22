@@ -74,6 +74,8 @@ var Engine = (function(global) {
         lastTime = Date.now();
         main();
         highScore();
+        player.speed = 0;
+        playerSpeedY = 0;
         reset();
     }
 
@@ -195,6 +197,7 @@ var Engine = (function(global) {
         if (keyPressed == 13) {
             isPaused = false;
             player.speed = 101;
+            playerSpeedY = 83;
             lastTime = Date.now();
             main();
         }

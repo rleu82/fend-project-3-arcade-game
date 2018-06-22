@@ -290,6 +290,7 @@ document.addEventListener('keyup', function(e) {
 let curLevel = 1;
 let curScore = 0;
 let curLives = 5;
+
 function buggedOut() {
     curLives--;
     let bugMessage = `<span>You bugged out! ${curLives} lives left!</span>`;
@@ -348,9 +349,20 @@ function nextLife() {
     playerSpeedY = 83;
 }
 
+function gameEndBanner() {
+    let theBanner = document.getElementById('banner-container');
+    let theThirdBanner = document.getElementById('third-banner');
+    let endMessage = `<span>Game Over</span>`;
+    let endMessage2 = `<span>Press ESC To Restart</span>`;
+    theBanner.innerHTML = endMessage;
+    theThirdBanner.innerHTML = endMessage2;
+    theBanner.classList.add('animated', 'flash', 'infinite');
+    theThirdBanner.classList.add('animated', 'tada');
+}
 function gameOver() {
     player.speed = 0;
     playerSpeedY = 0;
+    gameEndBanner();
 }
 function updateScore() {
     let scoreSpan = document.getElementById('box1-info1');
