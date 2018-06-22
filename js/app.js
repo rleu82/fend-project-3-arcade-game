@@ -280,30 +280,35 @@ document.addEventListener('keyup', function(e) {
 
 let curLevel = 1;
 let curScore = 0;
-let performanceGems = 0;
 // score and level tracking variables
 // level increase each time player reaches water
 // score will increase when: movement above grass safe is 50 points, gem give 100 points, clearing level 500 points
 function reachedWater() {
-    let theBanner = document.getElementById('banner-container');
-    // Insert level cleared message and animate level clear message using AnimateCSS
-    let atWaterMessage = `<span>Level ${curLevel} Cleared!</span>`;
-    theBanner.innerHTML = atWaterMessage;
-    theBanner.classList.add('animated', 'bounceIn');
+    levelAnnounce();
     // increase level number and add score for clearing level
     curLevel++;
     curScore = curScore + 500;
     updateScore();
     highScore();
-    performanceGems = 0;
 }
 
-function nextRound() {
+function levelAnnounce() {
+    let theBanner = document.getElementById('banner-container');
+    // Insert level cleared message and animate level clear message using AnimateCSS
+    let atWaterMessage = `<span>Level ${curLevel} Cleared!</span>`;
+    theBanner.innerHTML = atWaterMessage;
+    theBanner.classList.add('animated', 'bounceIn');
+}
+
+function clearAnnounce() {
     let theBanner = document.getElementById('banner-container');
     theBanner.classList.remove('animated', 'bounceIn');
     theBanner.innerHTML = ``;
+}
+function nextRound() {
     player.speed = 101;
     playerSpeedY = 83;
+    clearAnnounce();
     // instantiate gems for next round
     reInstantiateGems();
 }

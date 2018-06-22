@@ -10,60 +10,60 @@
     <div id="game-container" style="position: relative">
         <!-- Top overlay for game board-->
         <div id="animated">
-            <div id="box1"></div>
-            <div id="box2"></div>
-            <div id="box3"></div>
-            <div id="box4"></div>
-            <div id="box5"></div>
-            <div id="box6"></div>
-            <div id="box7"></div>
-            <div id="box8"></div>
-            <div id="box9"></div>
-            <div id="box10"></div>
-            <div id="box11"></div>
-            <div id="box12"></div>
-            <div id="box13"></div>
-            <div id="box14"></div>
-            <div id="box15"></div>
-            <div id="box16"></div>
-            <div id="box17"></div>
-            <div id="box18"></div>
-            <div id="box19"></div>
-            <div id="box20"></div>
-            <div id="box21"></div>
-            <div id="box22"></div>
-            <div id="box23"></div>
-            <div id="box24"></div>
-            <div id="box25"></div>
-            <div id="box26"></div>
-            <div id="box27"></div>
-            <div id="box28"></div>
-            <div id="box29"></div>
-            <div id="box30"></div>
-            <div id="box31"></div>
-            <div id="box32"></div>
-            <div id="box33"></div>
-            <div id="box34"></div>
-            <div id="box35"></div>
-            <div id="box36"></div>
-            <div id="box37"></div>
-            <div id="box38"></div>
-            <div id="box39"></div>
-            <div id="box40"></div>
-            <div id="box41"></div>
-            <div id="box42"></div>
-            <div id="box43"></div>
-            <div id="box44"></div>
-            <div id="box45"></div>
-            <div id="box46"></div>
-            <div id="box47"></div>
-            <div id="box48"></div>
-            <div id="box49"></div>
-            <div id="box50"></div>
-            <div id="box51"></div>
-            <div id="box52"></div>
-            <div id="box53"></div>
-            <div id="box54" class="game-bar"></div>
+            <div id="b1"></div>
+            <div id="b2"></div>
+            <div id="b3"></div>
+            <div id="b4"></div>
+            <div id="b5"></div>
+            <div id="b6"></div>
+            <div id="b7"></div>
+            <div id="b8"></div>
+            <div id="b9"></div>
+            <div id="b10"></div>
+            <div id="b11"></div>
+            <div id="b12"></div>
+            <div id="b13"></div>
+            <div id="b14"></div>
+            <div id="b15"></div>
+            <div id="b16"></div>
+            <div id="b17"></div>
+            <div id="b18"></div>
+            <div id="b19"></div>
+            <div id="b20"></div>
+            <div id="b21"></div>
+            <div id="b22"></div>
+            <div id="b23"></div>
+            <div id="b24"></div>
+            <div id="b25"></div>
+            <div id="b26"></div>
+            <div id="b27"></div>
+            <div id="b28"></div>
+            <div id="b29"></div>
+            <div id="b30"></div>
+            <div id="b31"></div>
+            <div id="b32"></div>
+            <div id="b33"></div>
+            <div id="b34"></div>
+            <div id="b35"></div>
+            <div id="b36"></div>
+            <div id="b37"></div>
+            <div id="b38"></div>
+            <div id="b39"></div>
+            <div id="b40"></div>
+            <div id="b41"></div>
+            <div id="b42"></div>
+            <div id="b43"></div>
+            <div id="b44"></div>
+            <div id="b45"></div>
+            <div id="b46"></div>
+            <div id="b47"></div>
+            <div id="b48"></div>
+            <div id="b49"></div>
+            <div id="b50"></div>
+            <div id="b51"></div>
+            <div id="b52"></div>
+            <div id="b53"></div>
+            <div id="b54" class="game-bar"></div>
         </div>
         <!-- Announcement Layer -->
         <div id="announcements">
@@ -72,10 +72,10 @@
                     <span>Score: 0</span>
                 </div>
                 <div id="box1-info2">
-                    <span>Lives: 10</span>
+                    <span>High Score: 0</span>
                 </div>
                 <div id="box1-info3">
-                    <span>High Score: 0</span>
+                    <span>Lives: 10</span>
                 </div>
             </div>
             <div></div>
@@ -95,6 +95,11 @@
 @import url('https://fonts.googleapis.com/css?family=Press+Start+2P');
 body {
     font-family: 'Press Start 2P', cursive;
+}
+body{
+    background: url(images/03-Late-Morning-tall.png); /* source http://www.bitday.me/download/ */
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 canvas { position: absolute; 
     z-index: 0; 
@@ -136,7 +141,7 @@ canvas { position: absolute;
     top: 0; 
 }
 #banner-container span {
-    font: bold 40px "Press Start 2P";
+    font: bold 36px "Press Start 2P";
     color: black;
     -webkit-animation-duration: 3s;
     animation-duration: 3s;
@@ -145,19 +150,19 @@ canvas { position: absolute;
     justify-content: center;
     padding-top: 20px;
 }
-.game-bar {
-    grid-column: 1 / 8;
-}
+
 #box1 {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 2fr 2fr 1fr;
     align-items: center;
     text-align: left;
 }
 
-#box1 span {
+#box1-info1 span,
+#box1-info2 span,
+#box1-info3 span {
     margin-left: 5px;
-    font: bold 18px;
+    font-size: 12px;
 }
     </style>
 </body>

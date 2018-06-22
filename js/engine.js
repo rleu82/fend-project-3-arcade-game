@@ -23,7 +23,7 @@ var Engine = (function(global) {
     var doc = document.getElementById('game-container'),
         win = global.window,
         canvas = document.createElement('canvas'),
-        ctx = canvas.getContext('2d'),
+        ctx = canvas.getContext('2d', { alpha: false }),
         lastTime;
     /* default canvas size
     canvas.width = 505;
@@ -74,6 +74,7 @@ var Engine = (function(global) {
     function init() {
         lastTime = Date.now();
         main();
+        highScore();
         reset();
     }
 
@@ -103,6 +104,9 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
             enemy.checkCollisions();
+        });
+        allGems.forEach(function(gem) {
+            gem.checkCollisions();
         });
         player.update();
     }
@@ -167,11 +171,13 @@ var Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
-        allEnemies.forEach(function(enemy) {
-            enemy.render();
-        });
+
         allGems.forEach(function(gem) {
             gem.render();
+        });
+
+        allEnemies.forEach(function(enemy) {
+            enemy.render();
         });
         player.render();
     }
@@ -181,21 +187,19 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        // isPaused = true;
-        // player.speed = 0;
-        // noop
+        isPaused = true;
+        player.speed = 0;
     }
-    /*
-    document.addEventListener("keyup", function(e) {
+
+    document.addEventListener('keyup', function(e) {
         var keyPressed = e.which || e.keyCode;
-        if (keyPressed == 80) {
+        if (keyPressed == 13) {
             isPaused = false;
             player.speed = 101;
             lastTime = Date.now();
             main();
         }
     });
-    */
 
     /* Go ahead and load all of the images we know we're going to need to
      * draw our game level. Then set init as the callback method, so that when
