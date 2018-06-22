@@ -233,7 +233,7 @@ let randomGemSprite = () =>
     ];
 
 // TODO: increase maxSpeed each time level is completed to add difficulty
-let maxSpeed = 400;
+let maxSpeed = 300;
 // Use maxSpeed to generate random speed of enemy
 let randomSpeed = () => {
     let howFast = Math.floor(Math.random() * Math.floor(maxSpeed));
@@ -286,27 +286,37 @@ document.addEventListener('keyup', function(e) {
     };
     player.handleInput(allowedKeys[e.keyCode]);
 });
-
+const theBanner = document.getElementById('banner-container');
+const theSecondBanner = document.getElementById('second-banner');
+const theThirdBanner = document.getElementById('third-banner');
 let curLevel = 1;
 let curScore = 0;
 let curLives = 5;
 
 function buggedOut() {
     curLives--;
+    updateLives();
     let bugMessage = `<span>You bugged out! ${curLives} lives left!</span>`;
     if (curLives === 1) {
         bugMessage = `<span>You bugged out! ${curLives} life left!</span>`;
     }
-    let theSecondBanner = document.getElementById('second-banner');
     theSecondBanner.innerHTML = bugMessage;
     theSecondBanner.classList.add('animated', 'tada');
     setTimeout(function() {
         nextLife();
-    }, 1000);
-    setTimeout(function() {
         clearAnnounce();
     }, 2000);
 }
+
+function startScreen() {
+    let endMessage = `<span>BUGGED OUT!</span>`;
+    let endMessage2 = `<span>Press Enter To Play</span>`;
+    theBanner.innerHTML = endMessage;
+    theThirdBanner.innerHTML = endMessage2;
+    theBanner.classList.add('animated', 'rubberBand', 'infinite');
+    theThirdBanner.classList.add('animated', 'flash', 'infinite');
+}
+
 // score and level tracking variables
 // level increase each time player reaches water
 // score will increase when: movement above grass safe is 50 points, gem give 100 points, clearing level 500 points
@@ -320,7 +330,6 @@ function reachedWater() {
 }
 
 function levelAnnounce() {
-    let theBanner = document.getElementById('banner-container');
     // Insert level cleared message and animate level clear message using AnimateCSS
     let atWaterMessage = `<span>Level ${curLevel} Cleared!</span>`;
     theBanner.innerHTML = atWaterMessage;
@@ -328,12 +337,12 @@ function levelAnnounce() {
 }
 
 function clearAnnounce() {
-    let theBanner = document.getElementById('banner-container');
-    let theSecondBanner = document.getElementById('second-banner');
-    theSecondBanner.classList.remove('animated', 'tada');
     theBanner.classList.remove('animated', 'bounceIn');
+    theSecondBanner.classList.remove('animated', 'tada');
+    theThirdBanner.classList.remove('animated', 'tada');
     theBanner.innerHTML = ``;
     theSecondBanner.innerHTML = ``;
+    theThirdBanner.innerHTML = ``;
 }
 
 function nextRound() {
@@ -350,19 +359,25 @@ function nextLife() {
 }
 
 function gameEndBanner() {
-    let theBanner = document.getElementById('banner-container');
-    let theThirdBanner = document.getElementById('third-banner');
     let endMessage = `<span>Game Over</span>`;
     let endMessage2 = `<span>Press ESC To Restart</span>`;
     theBanner.innerHTML = endMessage;
     theThirdBanner.innerHTML = endMessage2;
-    theBanner.classList.add('animated', 'flash', 'infinite');
-    theThirdBanner.classList.add('animated', 'tada');
+    theBanner.classList.add('animated', 'rubberBand', 'infinite');
+    theThirdBanner.classList.add('animated', 'flash', 'infinite');
 }
+
 function gameOver() {
     player.speed = 0;
     playerSpeedY = 0;
     gameEndBanner();
+    allEnemies.forEach(function(enemy) {
+        enemy.speed = 0;
+    });
+}
+function updateLives() {
+    let livesSpan = document.getElementById('box1-info3');
+    livesSpan.innerHTML = `<span>Lives: ${curLives}</span>`;
 }
 function updateScore() {
     let scoreSpan = document.getElementById('box1-info1');

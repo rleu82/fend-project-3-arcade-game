@@ -74,9 +74,8 @@ var Engine = (function(global) {
         lastTime = Date.now();
         main();
         highScore();
-        player.speed = 0;
-        playerSpeedY = 0;
         reset();
+        startScreen();
     }
 
     /* This function is called by main (our game loop) and itself calls all
@@ -190,12 +189,20 @@ var Engine = (function(global) {
     function reset() {
         isPaused = true;
         player.speed = 0;
+        playerSpeedY = 0;
+        allEnemies.forEach(function(enemy) {
+            enemy.x = -105;
+        });
+        reInstantiateGems();
     }
 
     document.addEventListener('keyup', function(e) {
         var keyPressed = e.which || e.keyCode;
         if (keyPressed == 13) {
             isPaused = false;
+            theBanner.classList.remove('animated', 'rubberBand', 'infinite');
+            theThirdBanner.classList.remove('animated', 'flash', 'infinite');
+            clearAnnounce();
             player.speed = 101;
             playerSpeedY = 83;
             lastTime = Date.now();
