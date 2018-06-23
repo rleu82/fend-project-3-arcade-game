@@ -171,7 +171,6 @@ var Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
-
         allGems.forEach(function(gem) {
             gem.render();
         });
@@ -212,10 +211,13 @@ var Engine = (function(global) {
             enemy.speed = randomSpeed();
         });
     }
-
+    let disableEnter = false;
+    let disableESC = false;
     document.addEventListener('keyup', function(e) {
         var keyPressed = e.which || e.keyCode;
-        if (keyPressed == 13) {
+        if (keyPressed == 13 && disableEnter == false) {
+            disableEnter = true;
+            disableESC = false;
             isPaused = false;
             theBanner.classList.remove('animated', 'rubberBand', 'infinite');
             theThirdBanner.classList.remove('animated', 'flash', 'infinite');
@@ -223,16 +225,26 @@ var Engine = (function(global) {
             clearAnnounce();
             main();
             restartEntities();
+        } else if (keyPressed == 13 && disableEnter == true) {
+            e.preventDefault();
+            player.speed = 0;
+            playerSpeedY = 0;
         }
     });
 
     document.addEventListener('keyup', function(e) {
         var keyPressed = e.which || e.keyCode;
-        if (keyPressed == 27) {
+        if (keyPressed == 27 && disableESC == false) {
+            disableEnter = false;
+            disableESC = true;
+            player.speed = 0;
+            playerSpeedY = 0;
             theBanner.classList.remove('animated', 'rubberBand', 'infinite');
             theThirdBanner.classList.remove('animated', 'flash', 'infinite');
             clearAnnounce();
             reset();
+        } else if (keyPressed == 27 && disableESC == true) {
+            e.preventDefault();
         }
     });
 
