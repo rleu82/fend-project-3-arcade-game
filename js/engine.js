@@ -190,10 +190,27 @@ var Engine = (function(global) {
         isPaused = true;
         player.speed = 0;
         playerSpeedY = 0;
+        curLevel = 1;
+        curScore = 0;
+        curLives = 5;
+        startScreen();
+        highScore();
+        updateLives();
+        updateScore();
         allEnemies.forEach(function(enemy) {
             enemy.x = -105;
         });
+        allGems.forEach(function(gem) {
+            gem.x = -105;
+        });
+    }
+    function restartEntities() {
+        player.speed = 101;
+        playerSpeedY = 83;
         reInstantiateGems();
+        allEnemies.forEach(function(enemy) {
+            enemy.speed = randomSpeed();
+        });
     }
 
     document.addEventListener('keyup', function(e) {
@@ -202,11 +219,20 @@ var Engine = (function(global) {
             isPaused = false;
             theBanner.classList.remove('animated', 'rubberBand', 'infinite');
             theThirdBanner.classList.remove('animated', 'flash', 'infinite');
-            clearAnnounce();
-            player.speed = 101;
-            playerSpeedY = 83;
             lastTime = Date.now();
+            clearAnnounce();
             main();
+            restartEntities();
+        }
+    });
+
+    document.addEventListener('keyup', function(e) {
+        var keyPressed = e.which || e.keyCode;
+        if (keyPressed == 27) {
+            theBanner.classList.remove('animated', 'rubberBand', 'infinite');
+            theThirdBanner.classList.remove('animated', 'flash', 'infinite');
+            clearAnnounce();
+            reset();
         }
     });
 

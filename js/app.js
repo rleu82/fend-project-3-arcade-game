@@ -375,6 +375,16 @@ function gameOver() {
         enemy.speed = 0;
     });
 }
+
+function restartEntities() {
+    player.speed = 101;
+    playerSpeedY = 83;
+    reInstantiateGems();
+    allEnemies.forEach(function(enemy) {
+        enemy.speed = randomSpeed();
+    });
+}
+
 function updateLives() {
     let livesSpan = document.getElementById('box1-info3');
     livesSpan.innerHTML = `<span>Lives: ${curLives}</span>`;
