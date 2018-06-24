@@ -1,171 +1,171 @@
 'use strict';
+// Create Parent Class
+class gameEntity {
+    constructor(x, y, speed) {
+        this.x = x;
+        this.y = y;
+        this.speed = speed;
+    }
+
+    // Draw entity on canvas
+    render() {
+        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    }
+}
+
 // Enemies our player must avoid
-let Enemy = function(x, y, speed) {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
-    this.x = x; // horizontal (row)
-    this.y = y; // vertical (column)
-    this.speed = speed; // enemy speed
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
-    this.sprite = 'images/enemy-bug.png';
-};
-
-// Update the enemy's position, required method for game
-// Parameter: dt, a time delta between ticks
-Enemy.prototype.update = function(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
-
-    /* Update Enemy position (horizontal x) based off the speed it is traveling and dt parameter as required */
-    this.x += this.speed * dt;
-
-    if (this.x > 707) {
-        this.x = -101;
-        // randomly place enemy on one of the tracks
-        this.y = randomEnemyPos();
-        // change speed of enemy once it place back to beginning of track
-        this.speed = randomSpeed();
+class Enemy extends gameEntity {
+    constructor(x, y, speed) {
+        super(x, y, speed);
+        this.sprite = 'images/enemy-bug.png';
     }
-};
 
-// Draw the enemy on the screen, required method for game
-Enemy.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
+    // Update enemy location on canvas
+    update(dt) {
+        // Update Enemy position (horizontal x) based off the speed
+        // it is traveling and dt parameter as required
+        this.x += this.speed * dt;
+        // If Enemy goes off canvas it returns the enemy to
+        // starting x position but on a random track (y) and
+        // assigns a random speed up to variable maxSpeed
+        if (this.x > 707) {
+            this.x = -101;
+            this.y = randomEnemyPos();
+            // change speed of enemy once it place back to beginning of track
+            this.speed = randomSpeed();
+        }
+    }
 
-// Collision Axis-Aligned Bounding Box Referenced from Mozilla 2D ollision detection.
-// Used numbers instead of player.height as stated at Mozilla.
-// 73 added to y made character fit perfectly in the tile but I wanted to give more maneuverability
-// so I lowered to 70 for adjust for quick movements.
-// X is more important in terms of collision. Most of the collisions will take place on x (row). Reducing
-// the box width gave more maneuverability and more enjoyable experience.
-Enemy.prototype.checkCollisions = function() {
-    if (
-        this.x < player.x + 65.5 &&
-        this.x + 65.5 > player.x &&
-        this.y < player.y + 70 &&
-        this.y + 70 > player.y
-    ) {
-        player.x = 303;
-        player.y = 664;
-        player.speed = 0;
-        playerSpeedY = 0;
-        player.x = 303;
-        player.y = 664;
-        buggedOut();
+    // Collision checking
+    checkCollisions() {
+        if (
+            this.x < player.x + 65.5 &&
+            this.x + 65.5 > player.x &&
+            this.y < player.y + 70 &&
+            this.y + 70 > player.y
+        ) {
+            player.x = 303;
+            player.y = 664;
+            player.speed = 0;
+            playerSpeedY = 0;
+            player.x = 303;
+            player.y = 664;
+            buggedOut();
+        }
     }
-};
+}
 
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
-let myChar = function(x, y, speed) {
-    this.x = x;
-    this.y = y;
-    this.speed = speed;
-    this.sprite = 'images/char-boy.png';
-};
-
-// myChar prototype for update
-myChar.prototype.update = function() {
-    // Update player position
-    // Keep the player sprite within the game area
-    // Restricted moving off screen by finding edge coordinates and subtracting row or column to find opposite point
-    if (player.y > 570) {
-        player.y = 570;
-    }
-    // Player reaches water. Player clears level.
-    // Player is set back to starting to start next level.
-    if (player.y < 0) {
-        player.y = -11;
-        player.speed = 0;
-        playerSpeedY = 0;
-        player.x = 303;
-        player.y = 664;
-        reachedWater();
-        setTimeout(function() {
-            nextRound();
-        }, 3000);
-    }
-    // 202 starting location plus (2 x 101 column width) = 404
-    if (player.x > 606) {
-        player.x = 606;
-    }
-    // 202 starting location minus (2 x 101 column width) = 0
-    if (player.x < 0) {
-        player.x = 0;
-    }
-    if (curLives == 0) {
-        gameOver();
-    }
-};
-
-// Render player sprite
-myChar.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
-
-// Required handleInput() method to manage keypress
-// player.speed is the same as the column width (101) to create uniform movement to each tile
-// playerSpeedY is same as row height (83). used player.speed as base minus 18 to get 83
+// Player character class
 let playerSpeedY = 83;
-myChar.prototype.handleInput = function(keyDirection) {
-    if (keyDirection == 'up') {
-        player.y -= playerSpeedY;
-        updateScore();
+class myChar extends gameEntity {
+    constructor(x, y, speed) {
+        super(x, y, speed);
+        this.sprite = 'images/char-boy.png';
     }
-    if (keyDirection == 'down') {
-        player.y += playerSpeedY;
-        updateScore();
-    }
-    if (keyDirection == 'left') {
-        player.x -= player.speed;
-        updateScore();
-    }
-    if (keyDirection == 'right') {
-        player.x += player.speed;
-        updateScore();
-    }
-};
 
-// Gem Constructor
-let itemGem = function(x, y, boxNum) {
-    this.x = x;
-    this.y = y;
-    this.boxNum = boxNum;
-    this.sprite = randomGemSprite();
-};
-
-// Render Gem
-itemGem.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
-
-// Check Gem Collision
-itemGem.prototype.checkCollisions = function() {
-    let boxID = document.getElementById(this.boxNum);
-    let addPoints = `<span>+100</span>`;
-    if (
-        this.x < player.x + 65.5 &&
-        this.x + 65.5 > player.x &&
-        this.y < player.y + 70 &&
-        this.y + 70 > player.y
-    ) {
-        curScore = curScore + 100;
-        updateScore();
-        highScore();
-        boxID.innerHTML = addPoints;
-        boxID.classList.add('animated', 'fadeOutUp');
-        this.x = -300;
-        this.y = -300;
-        setTimeout(function() {
-            boxID.classList.remove('animated', 'fadeOutUp');
-            boxID.innerHTML = ``;
-        }, 3000);
+    update() {
+        // Update player position
+        // Keep the player sprite within the game area
+        // Restricted moving off screen by finding edge coordinates and subtracting row or column to find opposite point
+        if (player.y > 570) {
+            player.y = 570;
+        } else if (player.y < 0) {
+            // Player reaches the water
+            player.y = -11;
+            player.speed = 0;
+            playerSpeedY = 0;
+            // Player sent back to starting position
+            player.x = 303;
+            player.y = 664;
+            reachedWater();
+            // Pauses 3 seconds before next level
+            setTimeout(function() {
+                nextRound();
+            }, 3000);
+        }
+        // Keep player from going too far right
+        // 202 is starting location, plus (2 x 101 column width) = 404, so 202+404=606
+        if (player.x > 606) {
+            player.x = 606;
+        } else if (player.x < 0) {
+            // Keep player from going too far left
+            // 202 starting location minus (2 x 101 column width) = 0
+            player.x = 0;
+        }
+        if (curLives == 0) {
+            gameOver();
+        }
     }
-};
+
+    // Required handleInput() method to manage keypress
+    // player.speed is the same as the column width (101) to create uniform movement to each tile
+    // playerSpeedY is same as row height (83). used player.speed as base minus 18 to get 83
+    handleInput(keyDirection) {
+        switch (keyDirection) {
+            case 'up':
+                player.y -= playerSpeedY;
+                updateScore();
+                break;
+            case 'down':
+                player.y += playerSpeedY;
+                updateScore();
+                break;
+            case 'left':
+                player.x -= player.speed;
+                updateScore();
+                break;
+            case 'right':
+                player.x += player.speed;
+                updateScore();
+        }
+    }
+}
+
+// Gem class:
+// boxNum corresponds to the grid number from the grid overlay placed above canvas
+class itemGem extends gameEntity {
+    constructor(x, y, boxNum) {
+        super(x, y);
+        this.boxNum = boxNum;
+        this.sprite = randomGemSprite();
+    }
+
+    // Check if gem was collected (collided):
+    checkCollisions() {
+        // Get current gem location
+        let boxID = document.getElementById(this.boxNum);
+        let addPoints = `<span>+100</span>`;
+        if (
+            this.x < player.x + 65.5 &&
+            this.x + 65.5 > player.x &&
+            this.y < player.y + 70 &&
+            this.y + 70 > player.y
+        ) {
+            // score is update, and animation of points display on the selected location
+            curScore = curScore + 100;
+            updateScore();
+            highScore();
+            boxID.innerHTML = addPoints;
+            boxID.classList.add('animated', 'fadeOutUp');
+            // gem moved off screen once collected until
+            // gems are reinstantiated
+            this.x = -300;
+            this.y = -300;
+            // remove the animation classes placed on the grid
+            setTimeout(function() {
+                boxID.classList.remove('animated', 'fadeOutUp');
+                boxID.innerHTML = ``;
+            }, 3000);
+        }
+    }
+}
+
+/*
+/
+/ Functions used to generate random values use to position enemy,
+/ calculate speed of enemy, random gem position, random gem sprite
+/
+*/
 
 // Generate random gem locations: x, y, boxNum (for CSSgrid interaction)
 let gridGemsPos = function() {
@@ -227,12 +227,13 @@ let randomGemSpriteArray = [
     'images/Gem-Green.png',
     'images/Gem-Orange.png'
 ];
+// Set sprite from randomSpriteArray
 let randomGemSprite = () =>
     randomGemSpriteArray[
         Math.floor(Math.random() * randomGemSpriteArray.length)
     ];
 
-// TODO: increase maxSpeed each time level is completed to add difficulty
+// Set base maxSpeed
 let maxSpeed = 300;
 // Use maxSpeed to generate random speed of enemy
 let randomSpeed = () => {
@@ -389,6 +390,7 @@ function updateLives() {
     let livesSpan = document.getElementById('box1-info3');
     livesSpan.innerHTML = `<span>Lives: ${curLives}</span>`;
 }
+
 function updateScore() {
     let scoreSpan = document.getElementById('box1-info1');
     scoreSpan.innerHTML = `<span>Score: ${curScore}</span>`;
