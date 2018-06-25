@@ -71,6 +71,7 @@ var Engine = (function(global) {
      * game loop.
      */
     function init() {
+        bgSound.play();
         lastTime = Date.now();
         main();
         highScore();
@@ -192,6 +193,7 @@ var Engine = (function(global) {
         curLevel = 1;
         curScore = 0;
         curLives = 5;
+        maxSpeed = 250;
         startScreen();
         highScore();
         updateLives();
@@ -203,6 +205,7 @@ var Engine = (function(global) {
             gem.x = -105;
         });
     }
+
     function restartEntities() {
         player.speed = 101;
         playerSpeedY = 83;
@@ -211,6 +214,7 @@ var Engine = (function(global) {
             enemy.speed = randomSpeed();
         });
     }
+
     let disableEnter = false;
     let disableESC = false;
     document.addEventListener('keyup', function(e) {
@@ -237,14 +241,16 @@ var Engine = (function(global) {
         if (keyPressed == 27 && disableESC == false) {
             disableEnter = false;
             disableESC = true;
-            player.speed = 0;
-            playerSpeedY = 0;
             theBanner.classList.remove('animated', 'rubberBand', 'infinite');
             theThirdBanner.classList.remove('animated', 'flash', 'infinite');
             clearAnnounce();
             reset();
         } else if (keyPressed == 27 && disableESC == true) {
+            reset();
+            2;
             e.preventDefault();
+            player.speed = 0;
+            playerSpeedY = 0;
         }
     });
 

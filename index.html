@@ -5,6 +5,7 @@
     <title>Effective JavaScript: Frogger</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+
 </head>
 <body>
     <div id="game-container" style="position: relative">
@@ -63,11 +64,11 @@
             <div id="b51"></div>
             <div id="b52"></div>
             <div id="b53"></div>
-            <div id="b54" class="game-bar"></div>
+            <div id="b54"></div>
         </div>
         <!-- Announcement Layer -->
         <div id="announcements">
-            <div id="box1" class="game-bar">
+            <div id="box1">
                 <div id="box1-info1">
                     <span>Score: 0</span>
                 </div>
@@ -79,7 +80,7 @@
                 </div>
             </div>
             <div></div>
-            <div id="banner-container"></div>
+            <div id="first-banner"></div>
             <div id="second-banner"></div>
             <div></div>
             <div id="third-banner"></div>
@@ -87,104 +88,11 @@
         </div>
         <!-- Game canvas will be rendered below -->
     </div>
-
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.0.13/howler.core.min.js"></script>
     <script src="js/resources.js"></script>
     <script src="js/app.js"></script>
     <script src="js/engine.js"></script>
-    <style>
-@import url('https://fonts.googleapis.com/css?family=Press+Start+2P');
-body {
-    font-family: 'Press Start 2P', cursive;
-}
-body{
-    background: url(images/03-Late-Morning-tall.png); /* source http://www.bitday.me/download/ */
-    background-repeat: no-repeat;
-    background-size: cover;
-}
-canvas { position: absolute; 
-    z-index: 0; 
-    height: 772px;
-    width: 707px;
-    margin-left: auto;
-    margin-right: auto;
-    left: 0;
-    right: 0;
-    top: 0; 
-}
-
-#animated {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-    grid-template-rows: 50px 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 60px;
-    position: absolute;
-    z-index: 1; 
-    height: 772px;
-    width: 707px;
-    margin-left: auto;
-    margin-right: auto;
-    left: 0;
-    right: 0;
-    top: 0; 
-}
-#announcements {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 50px 1fr 1fr 1fr 2fr 1fr 60px;
-    position: absolute;
-    z-index: 1; 
-    height: 772px;
-    width: 707px;
-    margin-left: auto;
-    margin-right: auto;
-    left: 0;
-    right: 0;
-    top: 0; 
-}
-#banner-container span {
-    font: bold 36px "Press Start 2P";
-    color: black;
-    -webkit-animation-duration: 3s;
-    animation-duration: 3s;
-    -moz-animation-duration: 3s;
-    align-items: center;
-    justify-content: center;
-    padding-top: 20px;
-}
-#second-banner span {
-    font: bold 25px "Press Start 2P";
-    color: black;
-    -webkit-animation-duration: 3s;
-    animation-duration: 3s;
-    -moz-animation-duration: 3s;
-    align-items: center;
-    justify-content: center;
-    padding-top: 20px;
-}
-
-#third-banner span {
-    font: bold 20px "Press Start 2P";
-    color: black;
-    -webkit-animation-duration: 3s;
-    animation-duration: 3s;
-    -moz-animation-duration: 3s;
-    align-items: center;
-    justify-content: center;
-    padding-top: 20px;
-}
-
-#box1 {
-    display: grid;
-    grid-template-columns: 2fr 2fr 1fr;
-    align-items: center;
-    text-align: left;
-}
-
-#box1-info1 span,
-#box1-info2 span,
-#box1-info3 span {
-    margin-left: 5px;
-    font-size: 12px;
-}
-    </style>
+    
 </body>
 </html>

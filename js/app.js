@@ -1,4 +1,57 @@
 'use strict';
+/*
+/
+/ Game sounds
+/
+*/
+
+// Mario's Way by
+// gianni caratelli / gianni73@hotmail.com
+// https://freesound.org/people/xsgianni/sounds/388079/
+var bgSound = new Howl({
+    src: ['sounds/xsgianni-mario-s-way.mp3'],
+    loop: true,
+    volume: 0.05
+});
+
+// Movement sound
+// source: https://freesound.org/people/myfox14/sounds/382310/
+// no attribution required
+var bgMove = new Howl({
+    src: ['sounds/carton-move-2.wav'],
+    volume: 0.2
+});
+
+// Collision with bug sound
+// source: https://freesound.org/people/andresix/sounds/245631/
+// no attribution required
+var bgBugged = new Howl({
+    src: ['sounds/game-over-arcade.wav'],
+    volume: 0.1
+});
+
+// Gem collect(collision) sound
+// source: https://freesound.org/people/Kodack/sounds/258020/
+// no attribution required
+var bgGem = new Howl({
+    src: ['sounds/arcade-bleep-sound.wav'],
+    volume: 0.1
+});
+
+// Jingle_Win_Synth_06 by
+// LittleRobotSoundFactory
+// source: https://freesound.org/people/LittleRobotSoundFactory/sounds/274181/
+var bgCleared = new Howl({
+    src: ['sounds/littlerobotsoundfactory__jingle-win-synth-06.wav'],
+    volume: 0.1
+});
+
+/*
+/
+/ Classes and methods
+/
+*/
+
 // Create Parent Class
 class gameEntity {
     constructor(x, y, speed) {
@@ -13,7 +66,7 @@ class gameEntity {
     }
 }
 
-// Enemies our player must avoid
+// Enemy (bug) class
 class Enemy extends gameEntity {
     constructor(x, y, speed) {
         super(x, y, speed);
@@ -37,6 +90,8 @@ class Enemy extends gameEntity {
     }
 
     // Collision checking
+    // X axis collision is more forgiving to give players a
+    // better experience for those crunch time movements.
     checkCollisions() {
         if (
             this.x < player.x + 65.5 &&
@@ -44,6 +99,7 @@ class Enemy extends gameEntity {
             this.y < player.y + 70 &&
             this.y + 70 > player.y
         ) {
+            bgBugged.play();
             player.x = 303;
             player.y = 664;
             player.speed = 0;
@@ -77,7 +133,9 @@ class myChar extends gameEntity {
             // Player sent back to starting position
             player.x = 303;
             player.y = 664;
+            // Score is updated, announcement displayed, sound played
             reachedWater();
+            bgCleared.play();
             // Pauses 3 seconds before next level
             setTimeout(function() {
                 nextRound();
@@ -103,18 +161,22 @@ class myChar extends gameEntity {
     handleInput(keyDirection) {
         switch (keyDirection) {
             case 'up':
+                bgMove.play();
                 player.y -= playerSpeedY;
                 updateScore();
                 break;
             case 'down':
+                bgMove.play();
                 player.y += playerSpeedY;
                 updateScore();
                 break;
             case 'left':
+                bgMove.play();
                 player.x -= player.speed;
                 updateScore();
                 break;
             case 'right':
+                bgMove.play();
                 player.x += player.speed;
                 updateScore();
         }
@@ -141,8 +203,10 @@ class itemGem extends gameEntity {
             this.y < player.y + 70 &&
             this.y + 70 > player.y
         ) {
-            // score is update, and animation of points display on the selected location
+            // score is updated, and animation of points
+            // for collecting gem is displayed on the grid
             curScore = curScore + 100;
+            bgGem.play();
             updateScore();
             highScore();
             boxID.innerHTML = addPoints;
@@ -221,20 +285,21 @@ let gridGemsPos = function() {
     return gemObject;
 };
 
-// Get random sprite from gem sprite array
+// Gem Sprite Array
 let randomGemSpriteArray = [
     'images/Gem-Blue.png',
     'images/Gem-Green.png',
     'images/Gem-Orange.png'
 ];
-// Set sprite from randomSpriteArray
+//Get random sprite from gem sprite array
 let randomGemSprite = () =>
     randomGemSpriteArray[
         Math.floor(Math.random() * randomGemSpriteArray.length)
     ];
 
-// Set base maxSpeed
-let maxSpeed = 300;
+// Set base maxSpeed. If speed is less than 50, increase speed by 100
+// to keep bug movement at a fair difficulty.
+let maxSpeed = 200;
 // Use maxSpeed to generate random speed of enemy
 let randomSpeed = () => {
     let howFast = Math.floor(Math.random() * Math.floor(maxSpeed));
@@ -244,15 +309,20 @@ let randomSpeed = () => {
     return howFast;
 };
 
+// Array for possible enemy (y) start locations
 // Top track starts: 62, 2nd track from top: 145, 3rd track: 228, 4th track: 311, 5th track: 394;
 let randomEnemyPosArray = [62, 145, 228, 311, 394];
 // Create Random Position for enemy based off the three rows(randomEnemyPosArray) the enemy will appear in.
 let randomEnemyPos = () =>
     randomEnemyPosArray[Math.floor(Math.random() * randomEnemyPosArray.length)];
 
-// Now instantiate your objects.
+/*
+/
+/ Instantiate Entities
+/
+*/
+
 // Place all enemy objects in an array called allEnemies
-// TODO: Push new enemy into array when difficulty changes
 let allEnemies = [
     new Enemy(-101, randomEnemyPos(), randomSpeed()),
     new Enemy(-101, randomEnemyPos(), randomSpeed()),
@@ -264,9 +334,13 @@ let allEnemies = [
 ];
 
 // Place the player object in a variable called player
+// 101 is the speed of player obectp
 let player = new myChar(303, 664, 101);
 
 // Generate 3 Gems and place them in array(allGems) to render
+// let gem equal to the gem position object then
+// grab x,y,boxNum. Had to create three separate gems or
+// the instantiated gems will use the same gridGemPos object.
 let gemOne = gridGemsPos();
 let gemTwo = gridGemsPos();
 let gemThree = gridGemsPos();
@@ -287,13 +361,21 @@ document.addEventListener('keyup', function(e) {
     };
     player.handleInput(allowedKeys[e.keyCode]);
 });
-const theBanner = document.getElementById('banner-container');
+
+/*
+/
+/ Game Management Functions
+/
+*/
+// Variables to manage game functions
+const theBanner = document.getElementById('first-banner');
 const theSecondBanner = document.getElementById('second-banner');
 const theThirdBanner = document.getElementById('third-banner');
 let curLevel = 1;
 let curScore = 0;
 let curLives = 5;
 
+// Manage player bug collision event. Subtract life start next life.
 function buggedOut() {
     curLives--;
     updateLives();
@@ -309,6 +391,7 @@ function buggedOut() {
     }, 2000);
 }
 
+// Splash screen starting game
 function startScreen() {
     let endMessage = `<span>BUGGED OUT!</span>`;
     let endMessage2 = `<span>Press Enter To Play</span>`;
@@ -325,11 +408,13 @@ function reachedWater() {
     levelAnnounce();
     // increase level number and add score for clearing level
     curLevel++;
+    maxSpeed = maxSpeed + 10;
     curScore = curScore + 500;
     updateScore();
     highScore();
 }
 
+// Display Level
 function levelAnnounce() {
     // Insert level cleared message and animate level clear message using AnimateCSS
     let atWaterMessage = `<span>Level ${curLevel} Cleared!</span>`;
@@ -337,6 +422,7 @@ function levelAnnounce() {
     theBanner.classList.add('animated', 'bounceIn');
 }
 
+// Clear all banner announcements
 function clearAnnounce() {
     theBanner.classList.remove('animated', 'bounceIn');
     theSecondBanner.classList.remove('animated', 'tada');
@@ -346,6 +432,9 @@ function clearAnnounce() {
     theThirdBanner.innerHTML = ``;
 }
 
+// Resets player speed after reaching water
+// Clear all banners announcements
+// Place gems in random location
 function nextRound() {
     player.speed = 101;
     playerSpeedY = 83;
@@ -354,11 +443,13 @@ function nextRound() {
     reInstantiateGems();
 }
 
+// Reset players speed after death
 function nextLife() {
     player.speed = 101;
     playerSpeedY = 83;
 }
 
+// Game over banner
 function gameEndBanner() {
     let endMessage = `<span>Game Over</span>`;
     let endMessage2 = `<span>Press ESC To Restart</span>`;
@@ -368,6 +459,8 @@ function gameEndBanner() {
     theThirdBanner.classList.add('animated', 'flash', 'infinite');
 }
 
+// Stop player and bug movement
+// Display game over
 function gameOver() {
     player.speed = 0;
     playerSpeedY = 0;
@@ -377,6 +470,7 @@ function gameOver() {
     });
 }
 
+// Reset player speed, replace gems in random locations, reset random enemy speed
 function restartEntities() {
     player.speed = 101;
     playerSpeedY = 83;
@@ -386,11 +480,13 @@ function restartEntities() {
     });
 }
 
+// Display current lives
 function updateLives() {
     let livesSpan = document.getElementById('box1-info3');
     livesSpan.innerHTML = `<span>Lives: ${curLives}</span>`;
 }
 
+// Display current score
 function updateScore() {
     let scoreSpan = document.getElementById('box1-info1');
     scoreSpan.innerHTML = `<span>Score: ${curScore}</span>`;
@@ -401,6 +497,9 @@ function updateScore() {
     }
 }
 
+// Update High Score
+// If current score is higher than highscore, high score and current score
+// is displayed the same High score saved in local storage.
 function highScore() {
     let highScoreSpan = document.getElementById('box1-info2');
     let curHighScore = Number(localStorage.HighScore);
@@ -415,6 +514,7 @@ function highScore() {
     }
 }
 
+// Resets gem sprite and location
 function reInstantiateGems() {
     let gemOne = gridGemsPos();
     let gemTwo = gridGemsPos();
