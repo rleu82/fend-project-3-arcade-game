@@ -146,7 +146,7 @@ class MyChar extends GameEntity {
         // 202 is starting location, plus (2 x 101 column width) = 404, so 202+404=606
         if (this.x > 606) {
             this.x = 606;
-        } else if (player.x < 0) {
+        } else if (this.x < 0) {
             // Keep player from going too far left
             // 202 starting location minus (2 x 101 column width) = 0
             this.x = 0;
