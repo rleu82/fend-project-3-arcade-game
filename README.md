@@ -5,7 +5,7 @@ A classic arcade Frogger clone.
 
 You can also clone it through your terminal: 
 ```
-git clone https://github.com/rleu82/fend-project-3-arcade-game
+$ git clone https://github.com/rleu82/fend-project-3-arcade-game
 ```
 or download it by clicking the green button above. Once cloned or downloaded (and unzipped), play locally by opening index.html. Enjoy!
 
