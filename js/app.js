@@ -15,7 +15,7 @@ var bgSound = new Howl({
 });
 
 // Movement sound
-// source: https://freesound.org/people/myfox14/sounds/382310/
+// source: https://freesound.org/people/andresix/sounds/245631/
 // no attribution required
 var bgMove = new Howl({
     src: ['sounds/carton-move-2.wav'],
@@ -23,7 +23,7 @@ var bgMove = new Howl({
 });
 
 // Collision with bug sound
-// source: https://freesound.org/people/andresix/sounds/245631/
+// source: https://freesound.org/people/myfox14/sounds/382310/
 // no attribution required
 var bgBugged = new Howl({
     src: ['sounds/game-over-arcade.wav'],
@@ -196,7 +196,7 @@ class itemGem extends gameEntity {
     checkCollisions() {
         // Get current gem location
         let boxID = document.getElementById(this.boxNum);
-        let addPoints = `<span>+100</span>`;
+        let addPoints = `<span>${gemScore}</span>`;
         if (
             this.x < player.x + 65.5 &&
             this.x + 65.5 > player.x &&
@@ -205,7 +205,7 @@ class itemGem extends gameEntity {
         ) {
             // score is updated, and animation of points
             // for collecting gem is displayed on the grid
-            curScore = curScore + 100;
+            curScore = curScore + gemScore;
             bgGem.play();
             updateScore();
             highScore();
@@ -374,7 +374,7 @@ const theThirdBanner = document.getElementById('third-banner');
 let curLevel = 1;
 let curScore = 0;
 let curLives = 5;
-
+let gemScore = 100;
 // Manage player bug collision event. Subtract life start next life.
 function buggedOut() {
     curLives--;
@@ -409,7 +409,8 @@ function reachedWater() {
     // increase level number and add score for clearing level
     curLevel++;
     maxSpeed = maxSpeed + 10;
-    curScore = curScore + 500;
+    gemScore = gemScore + 10;
+    curScore = curScore + 250;
     updateScore();
     highScore();
 }
