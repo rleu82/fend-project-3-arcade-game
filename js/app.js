@@ -349,19 +349,6 @@ let secondGem = new itemGem(gemTwo.x, gemTwo.y, gemTwo.boxNum);
 let thirdGem = new itemGem(gemThree.x, gemThree.y, gemThree.boxNum);
 let allGems = [firstGem, secondGem, thirdGem];
 
-// This listens for key presses and sends the keys to your
-// Player.handleInput() method. You don't need to modify this.
-document.addEventListener('keyup', function(e) {
-    var allowedKeys = {
-        37: 'left',
-        38: 'up',
-        39: 'right',
-        40: 'down',
-        80: 'pause'
-    };
-    player.handleInput(allowedKeys[e.keyCode]);
-});
-
 /*
 /
 / Game Management Functions
@@ -534,3 +521,21 @@ function reInstantiateGems() {
     thirdGem.sprite = randomGemSprite();
     allGems = [firstGem, secondGem, thirdGem];
 }
+
+/*
+/
+/  Player Movement Event Listener
+/
+*/
+// This listens for key presses and sends the keys to your
+// Player.handleInput() method. You don't need to modify this.
+document.addEventListener('keyup', function(e) {
+    var allowedKeys = {
+        37: 'left',
+        38: 'up',
+        39: 'right',
+        40: 'down',
+        80: 'pause'
+    };
+    player.handleInput(allowedKeys[e.keyCode]);
+});
