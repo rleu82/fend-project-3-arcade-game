@@ -3,7 +3,6 @@ A classic arcade Frogger clone.
 
 [Bugged Out](https://rleu82.github.io/fend-project-3-arcade-game/) Play it Here!
 ## Game Play
----
 **General**: Use your arrow keys to avoid the bugs and reach the water. Collect gems for extra points. Try to beat your high score!
 
 **Mechanics**:
@@ -14,7 +13,6 @@ A classic arcade Frogger clone.
 * Gems spawn randomly on the board each time you clear the level. 
 
 ## Scoring
----
 **Movement**: 
 * 50 points are added to your score with each movement that is above the grass.
 
@@ -26,13 +24,11 @@ A classic arcade Frogger clone.
 * Reaching the water will give you 250 points.
 
 ## Dependencies
----
 [Animate.css](https://daneden.github.io/animate.css/): Used to animate points from collecting gem. Also used to animate game text and announcements.
 
 [Howler.JS](https://howlerjs.com/): Used to play all game music and sound effects.
 
 ## Resources and Attributions
----
 [Collision Detection](https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection): Based off Axis-Aligned Bounding Box on Mozilla.
 
 [BitDay](http://www.bitday.me/download/): 8Bit style background
