@@ -1,7 +1,14 @@
 # **Bugged Out**
 A classic arcade Frogger clone.
 
-[Bugged Out](https://rleu82.github.io/fend-project-3-arcade-game/) Play it Here!
+[Bugged Out](https://rleu82.github.io/fend-project-3-arcade-game/) Play it here!
+
+You can also clone it through your terminal: 
+```
+git clone https://github.com/rleu82/fend-project-3-arcade-game
+```
+or download it by clicking the green button above. Once cloned or downloaded (and unzipped), play locally by opening index.html. Enjoy!
+
 ## Game Play
 **General**: Use your arrow keys to avoid the bugs and reach the water. Collect gems for extra points. Try to beat your high score!
 
@@ -37,10 +44,10 @@ A classic arcade Frogger clone.
 
 [Mario's Way](https://freesound.org/people/xsgianni/sounds/388079/): Created by [Gianni Caratelli](gianni73@hotmail.com) is the awesome game music used on this project.
 
-[Cartoon Move 2](https://freesound.org/people/andresix/sounds/245631/): is a free Creative Commons 0 License movement sound that is played each time arrow keys are pressed.
+[Cartoon Move 2](https://freesound.org/people/andresix/sounds/245631/): A free Creative Commons 0 License movement sound that is played each time arrow keys are pressed.
 
-[Game Over Arcade](https://freesound.org/people/myfox14/sounds/382310/): is also a CC0 licensed sound that is played when player collides with a bug.
+[Game Over Arcade](https://freesound.org/people/myfox14/sounds/382310/): A CC0 licensed sound that is played when player collides with a bug.
 
 [Alarm Beep Sound](https://freesound.org/people/Kodack/sounds/258020/): CC0 licensed sound that is played when player collects a gem.
 
-[Jingle Win Synth 6](https://freesound.org/people/LittleRobotSoundFactory/sounds/274181/): is created  by [LittleRobotSoundFactory](https://freesound.org/people/LittleRobotSoundFactory/) and is used when player clears a level.
+[Jingle Win Synth 6](https://freesound.org/people/LittleRobotSoundFactory/sounds/274181/): Created  by [LittleRobotSoundFactory](https://freesound.org/people/LittleRobotSoundFactory/) and is used when player clears a level.
